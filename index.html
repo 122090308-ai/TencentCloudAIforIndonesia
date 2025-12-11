@@ -4,40 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tencent Cloud AI Fusion Nexus</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --color-light-bg: #0a0e17; /* 深色科技背景 */
-            --color-surface: #121926; /* 卡片背景 */
-            --color-text-dark: #e2e8f0; /* 浅色文本 */
-            --color-text-secondary: #94a3b8;
-            --color-shadow: rgba(0, 120, 255, 0.15);
+            --color-light-bg: #ffffff; /* 白色背景（原黑色） */
+            --color-surface: #f8fafc; /* 浅灰卡片背景（原深灰） */
+            --color-text-dark: #1e293b; /* 黑色文本（原白色） */
+            --color-text-secondary: #475569; /* 深灰次要文本（原浅灰） */
+            --color-shadow: rgba(0, 120, 255, 0.08); /* 弱化阴影 */
             --transition-time: 0.4s;
-            --glow-effect: 0 0 15px rgba(0, 120, 255, 0.5);
+            --glow-effect: 0 0 15px rgba(0, 120, 255, 0.3);
         }
 
-        /* 主题颜色定义 - 增强科技感渐变（重点修改eKYC配色） */
+        /* 主题颜色定义 - 保留产品区分色，适配白底 */
         .theme-adp { 
             --color-accent: #0088FF; 
-            --color-gradient-start: #0066ff; 
-            --color-gradient-end: #0022aa; 
-            --glow-color: rgba(0, 102, 255, 0.7);
+            --color-gradient-start: #e6f0ff; /* 浅蓝渐变起始（适配白底） */
+            --color-gradient-end: #cce0ff; /* 浅蓝渐变结束（适配白底） */
+            --glow-color: rgba(0, 102, 255, 0.4); /* 弱化光效 */
         } 
         .theme-ekyc { 
-            --color-accent: #06b6d4; /* 青蓝色主色 */
-            --color-gradient-start: #22d3ee; /* 亮青蓝渐变起始 */
-            --color-gradient-end: #0891b2; /* 深青蓝渐变结束 */
-            --glow-color: rgba(34, 211, 238, 0.7); /* 青蓝色光效 */
+            --color-accent: #06b6d4; /* 青蓝色主色（保留） */
+            --color-gradient-start: #e0f2fe; /* 浅青蓝渐变起始（适配白底） */
+            --color-gradient-end: #bae6fd; /* 深青蓝渐变结束（适配白底） */
+            --glow-color: rgba(34, 211, 238, 0.4); /* 青蓝色光效（弱化） */
         } 
         .theme-palmai { 
             --color-accent: #10b981; 
-            --color-gradient-start: #10b981; 
-            --color-gradient-end: #059669; 
-            --glow-color: rgba(16, 185, 129, 0.7);
+            --color-gradient-start: #ecfdf5; /* 浅绿渐变起始（适配白底） */
+            --color-gradient-end: #d1fae5; /* 深绿渐变结束（适配白底） */
+            --glow-color: rgba(16, 185, 129, 0.4);
         }
 
-        /* 粒子背景效果 */
+        /* 粒子背景效果 - 适配白底 */
         .particle-bg {
             position: fixed;
             top: 0;
@@ -45,7 +45,7 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: radial-gradient(circle at 10% 20%, rgba(18, 25, 38, 0.95), var(--color-light-bg) 90%);
+            background: radial-gradient(circle at 10% 20%, rgba(248, 250, 252, 0.95), var(--color-light-bg) 90%);
             overflow: hidden;
         }
 
@@ -74,7 +74,7 @@
             }
         }
 
-        /* 产品视图背景 - 增强科技感 */
+        /* 产品视图背景 - 适配白底 */
         .product-view.active {
             background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
             display: block;
@@ -84,7 +84,7 @@
             overflow: hidden;
         }
 
-        /* 科技感装饰元素 */
+        /* 科技感装饰元素 - 适配白底 */
         .product-view.active::before {
             content: '';
             position: absolute;
@@ -93,8 +93,8 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 30% 20%, rgba(0, 0, 0, 0.1) 0%, transparent 40%),
-                linear-gradient(45deg, transparent 30%, rgba(var(--glow-color), 0.05) 70%);
+                radial-gradient(circle at 30% 20%, rgba(0, 0, 0, 0.02) 0%, transparent 40%),
+                linear-gradient(45deg, transparent 30%, rgba(var(--glow-color), 0.02) 70%);
             pointer-events: none;
         }
         
@@ -105,18 +105,19 @@
 
         .tab-content-area {
             background: var(--color-surface); 
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.08); /* 浅灰边框（适配白底） */
             backdrop-filter: blur(10px);
         }
 
         .product-view h2 {
-            color: var(--color-surface);
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            font-family: 'Orbitron', sans-serif;
+            color: var(--color-accent); /* 修改为主题强调色 */
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 弱化阴影 */
+            font-family: 'Arial', sans-serif;
             letter-spacing: 1px;
             position: relative;
             display: inline-block;
             margin-bottom: 20px;
+            font-size: 1.8em; /* 标题字号 */
         }
 
         .product-view h2::after {
@@ -131,16 +132,19 @@
         }
 
         .internal-tab-menu button {
-            background: rgba(18, 25, 38, 0.8);
+            background: rgba(248, 250, 252, 0.8); /* 浅灰按钮背景（适配白底） */
             border: 1px solid var(--color-accent);
-            color: var(--color-text-dark);
+            color: var(--color-text-dark); /* 黑色按钮文字（原白色） */
             backdrop-filter: blur(5px);
+            font-size: 1.1em; /* 比标题小一号 */
+            text-transform: capitalize; /* 首字母大写 */
+            letter-spacing: normal; /* 取消大写带来的字母间距 */
         }
 
         .internal-tab-menu button.active,
         .internal-tab-menu button:hover {
             background: var(--color-accent);
-            color: var(--color-surface);
+            color: white; /* 激活按钮文字白色（对比） */
             box-shadow: var(--glow-effect);
         }
 
@@ -148,8 +152,8 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Rajdhani', sans-serif;
-            color: var(--color-text-dark);
+            font-family: 'Arial', sans-serif; /* 统一为Arial字体 */
+            color: var(--color-text-dark); /* 全局黑色文本（原白色） */
             scroll-behavior: smooth;
         }
 
@@ -163,10 +167,10 @@
             position: relative;
         }
 
-        /* 头部和导航 - 科技感升级 */
+        /* 头部和导航 - 适配白底 */
         .header {
             width: 100%;
-            background: rgba(18, 25, 38, 0.9);
+            background: rgba(255, 255, 255, 0.9); /* 白色头部背景（原深灰） */
             padding: 15px 50px;
             display: flex;
             justify-content: space-between;
@@ -175,14 +179,14 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08); /* 浅灰边框（适配白底） */
             backdrop-filter: blur(10px);
         }
 
         .logo h1 {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Arial', sans-serif;
             font-size: 1.8em;
-            color: var(--color-text-dark);
+            color: var(--color-text-dark); /* 黑色logo文字（原白色） */
             position: relative;
         }
 
@@ -206,7 +210,7 @@
             100% { opacity: 1; transform: translateY(-50%) scale(1); }
         }
 
-        /* 菜单按钮 - 科技感样式 */
+        /* 菜单按钮 - 适配白底 */
         .main-menu button {
             background: none;
             border: none;
@@ -217,8 +221,8 @@
             text-transform: uppercase;
             transition: all var(--transition-time);
             letter-spacing: 1px;
-            color: var(--color-text-secondary);
-            font-family: 'Orbitron', sans-serif;
+            color: var(--color-text-secondary); /* 深灰菜单文字（原浅灰） */
+            font-family: 'Arial', sans-serif;
             position: relative;
         }
 
@@ -251,24 +255,24 @@
             width: 100%;
         }
 
-        /* 语言切换 - 科技感样式 */
+        /* 语言切换 - 适配白底 */
         .language-switcher button {
-            background: rgba(18, 25, 38, 0.5);
-            border: 1px solid var(--color-text-secondary);
+            background: rgba(248, 250, 252, 0.5); /* 浅灰背景（适配白底） */
+            border: 1px solid var(--color-text-secondary); /* 深灰边框（适配白底） */
             border-radius: 5px;
             padding: 5px 10px;
             cursor: pointer;
             margin-left: 5px;
             transition: all var(--transition-time);
             font-size: 0.9em;
-            color: var(--color-text-secondary);
-            font-family: 'Orbitron', sans-serif;
+            color: var(--color-text-secondary); /* 深灰文字（原浅灰） */
+            font-family: 'Arial', sans-serif;
         }
 
         .language-switcher button.active {
             background: var(--color-accent);
             border-color: var(--color-accent);
-            color: var(--color-surface);
+            color: white; /* 激活语言按钮文字白色（对比） */
             font-weight: bold;
             box-shadow: var(--glow-effect);
         }
@@ -281,7 +285,7 @@
             animation: fadeIn 0.6s ease-out;
         }
 
-        /* 内部 Tab 按钮 - 增强科技感 */
+        /* 内部 Tab 按钮 - 适配白底 */
         .internal-tab-menu {
             display: flex;
             justify-content: center;
@@ -293,15 +297,12 @@
             padding: 15px 30px;
             margin: 0;
             cursor: pointer;
-            font-size: 1.3em;
-            text-transform: uppercase;
             transition: all 0.4s ease;
             border-radius: 8px;
             font-weight: 700;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* 弱化阴影（适配白底） */
             min-width: 200px;
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Arial', sans-serif;
             position: relative;
             overflow: hidden;
         }
@@ -313,7 +314,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent); /* 适配白底 */
             transition: 0.5s;
         }
         
@@ -326,13 +327,13 @@
             transform: translateY(-2px);
         }
 
-        /* 内部 Tab 内容区 - 增强科技感卡片 */
+        /* 内部 Tab 内容区 - 适配白底 */
         .tab-content-area {
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px;
             border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); /* 弱化阴影（适配白底） */
             min-height: 500px;
             position: relative;
             overflow: hidden;
@@ -345,7 +346,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.01) 0%, transparent 50%); /* 适配白底 */
             pointer-events: none;
         }
 
@@ -382,17 +383,17 @@
             text-shadow: 0 0 10px var(--glow-color);
         }
         
-        /* 图片容器样式 - 科技感边框 */
+        /* 图片容器样式 - 适配白底 */
         .image-container {
             min-height: 250px;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.8); /* 白色背景（原深灰） */
             border-radius: 12px;
             padding: 15px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08); /* 弱化阴影（适配白底） */
             display: flex;
             justify-content: center;
             align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.08); /* 浅灰边框（适配白底） */
             position: relative;
             overflow: hidden;
         }
@@ -404,7 +405,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, transparent 30%, rgba(var(--glow-color), 0.05) 70%);
+            background: linear-gradient(45deg, transparent 30%, rgba(var(--glow-color), 0.02) 70%); /* 适配白底 */
             pointer-events: none;
         }
 
@@ -436,8 +437,8 @@
             width: 100%;
             min-height: auto;
             padding: 15px;
-            background: rgba(0, 0, 0, 0.3);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.8); /* 白色背景（原深灰） */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08); /* 弱化阴影（适配白底） */
         }
 
         .multi-image-container .image-container img {
@@ -449,7 +450,7 @@
             object-fit: contain; 
         }
 
-        /* 操作按钮 - 增强科技感 */
+        /* 操作按钮 - 适配白底 */
         .action-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -464,7 +465,7 @@
             justify-content: center;
             height: 140px;
             padding: 20px;
-            background: rgba(18, 25, 38, 0.7);
+            background: rgba(248, 250, 252, 0.7); /* 浅灰背景（适配白底） */
             border: 1px solid var(--color-accent);
             border-radius: 12px;
             text-decoration: none;
@@ -472,7 +473,7 @@
             font-weight: bold;
             color: var(--color-accent);
             transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* 弱化阴影（适配白底） */
             text-align: center;
             backdrop-filter: blur(5px);
             position: relative;
@@ -486,7 +487,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent); /* 适配白底 */
             transition: 0.6s;
         }
 
@@ -494,12 +495,11 @@
             left: 100%;
         }
 
-        .action-button i {
-            margin: 0 0 10px 0;
-            font-size: 2.5em;
-            color: var(--color-accent);
-            text-shadow: var(--glow-effect);
-            transition: all 0.3s ease;
+        .action-button:hover {
+            background: var(--color-accent);
+            color: white; /* 悬停按钮文字白色（对比） */
+            box-shadow: var(--glow-effect), 0 10px 30px rgba(0, 0, 0, 0.1); /* 弱化阴影（适配白底） */
+            transform: translateY(-5px);
         }
         
         .action-button span {
@@ -507,32 +507,25 @@
             line-height: 1.3;
             color: var(--color-accent); 
             transition: color 0.3s ease;
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Arial', sans-serif;
             letter-spacing: 0.5px;
         }
 
-        .action-button:hover {
-            background: var(--color-accent);
-            color: var(--color-surface);
-            box-shadow: var(--glow-effect), 0 10px 30px rgba(0, 0, 0, 0.3);
-            transform: translateY(-5px);
-        }
-        
         .action-button:hover i,
         .action-button:hover span {
-            color: var(--color-surface);
+            color: white; /* 悬停图标/文字白色（对比） */
             text-shadow: none;
         }
 
         /* 小标题样式 */
         .section-subtitle {
             font-size: 1.4em;
-            color: var(--color-text-dark);
+            color: var(--color-text-dark); /* 黑色小标题（原白色） */
             border-left: 4px solid var(--color-accent);
             padding-left: 15px;
             margin-bottom: 20px;
             font-weight: 700;
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Arial', sans-serif;
             letter-spacing: 0.5px;
             position: relative;
         }
@@ -548,7 +541,7 @@
             box-shadow: var(--glow-effect);
         }
 
-        /* 列表样式优化 */
+        /* 列表样式优化 - 适配白底 */
         ul {
             margin-left: 25px;
             margin-top: 10px;
@@ -646,7 +639,7 @@
                 min-width: unset;
                 width: 100%;
                 padding: 12px 20px;
-                font-size: 1.1em;
+                font-size: 1em; /* 移动端进一步调整 */
             }
             
             .product-view h2 {
@@ -656,9 +649,28 @@
             .section-subtitle {
                 font-size: 1.2em;
             }
+            
+            /* 联系方式和版权信息移动端适配 */
+            .contact-section {
+                padding: 25px 15px;
+                text-align: center;
+            }
+            
+            .contact-section .contact-card {
+                padding: 20px 15px;
+            }
+            
+            .contact-section p {
+                font-size: 0.95em;
+                line-height: 1.8;
+            }
+            
+            .copyright-section {
+                padding: 15px 15px;
+            }
         }
 
-        /* 加载动画 */
+        /* 加载动画 - 适配白底 */
         .loader {
             position: fixed;
             top: 0;
@@ -677,7 +689,7 @@
             content: '';
             width: 50px;
             height: 50px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
+            border: 3px solid rgba(0, 0, 0, 0.08); /* 浅灰边框（适配白底） */
             border-top-color: var(--color-accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -686,6 +698,52 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* 联系方式样式 - 优化美观度 */
+        .contact-section {
+            background: linear-gradient(135deg, var(--color-surface) 0%, #f0f4f9 100%);
+            padding: 40px 50px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .contact-card {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 136, 255, 0.1);
+        }
+
+        .contact-card p {
+            color: var(--color-text-dark);
+            font-size: 0.9em;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        .contact-card p strong {
+            color: var(--color-accent);
+            font-weight: 700;
+        }
+
+        /* 版权信息样式 */
+        .copyright-section {
+            background: rgba(248, 250, 252, 0.9);
+            padding: 20px 50px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .copyright-section p {
+            color: var(--color-text-secondary);
+            font-size: 0.9em;
+            text-align: center;
+            margin: 0;
         }
     </style>
 </head>
@@ -755,6 +813,18 @@
         </div>
     </main>
 
+    <!-- 联系方式部分 - 优化美观度 -->
+    <div class="contact-section">
+        <div class="contact-card">
+            <p>If any questions, please contact Tencent AI Product Team for Indonesia through WhatsApp. <strong>Katrina:</strong> +66 65 118 0758, <strong>Neil:</strong> +66 98 367 1058, <strong>Reyna:</strong> +86 147 3966 8258</p>
+        </div>
+    </div>
+
+    <!-- 版权信息部分 -->
+    <div class="copyright-section">
+        <p>Copyright © 2013-2025 Tencent Cloud. All Rights Reserved.</p>
+    </div>
+
     <script>
         // 生成粒子背景
         function createParticles() {
@@ -802,8 +872,8 @@
                 'menu-adp': 'ADP',
                 'menu-palmai': 'PalmAI',
                 'menu-ekyc': 'eKYC', 
-                'tab-introduction': 'Product Overview',
-                'tab-promotional': 'Media & Showcase',
+                'tab-introduction': 'Product overview',
+                'tab-promotional': 'Media & showcase',
                 'tab-practical': 'Guides & API', 
                 
                 'adp-title': 'Tencent Cloud ADP - Build With Ease, Proven to Deliver, Trusted by Enterprises',
@@ -813,10 +883,10 @@
                 'adp-introduction': `
                     <div class="intro-layout">
                         <div class="intro-text">
-                            <p class="section-subtitle">Core Capability</p>
+                            <p class="section-subtitle">Core Capabilities</p>
                             <p>An enterprise-grade platform leveraging <span class="highlight">RAG+LLM, workflow, and multi-agent </span> for transformative AI applications. It simplifies complex business logic into deployable agents.</p>
                             
-                            <p class="section-subtitle" style="margin-top: 20px;">Application Frameworks</p>
+                            <p class="section-subtitle" style="margin-top: 20px;">Execution Modes</p>
                             <ul>
                                 <li><strong>Standard Mode:</strong> Intelligent knowledge retrieval for quick, accurate answers.</li>
                                 <li><strong>Workflow Mode:</strong> Executes defined, step-by-step business processes (e.g., RPA integration).</li>
@@ -872,7 +942,7 @@
                             "Operation Guide"
                         )}
                         ${createActionButton(
-                            "#", 
+                            "https://www.tencentcloud.com/document/product/1254/73172", 
                             "fas fa-rocket", 
                             "Getting Started"
                         )}
@@ -888,7 +958,7 @@
                         </div>
                         <div class="intro-text">
                             <p class="section-subtitle">Core Function</p>
-                            <p>PalmAI provides highly secure identity verification using advanced features such as <span class="highlight">palm print and internal vein recognition</span>. It ensures rapid, hygienic, and zero-touch authentication.</p>
+                            <p>PalmAI provides highly secure identity verification using advanced <span class="highlight">palm print and internal vein recognition</span>. It ensures rapid, hygienic, and zero-touch authentication.</p>
                             
                             <p class="section-subtitle" style="margin-top: 20px;">Advantages</p>
                             <ul>
@@ -925,7 +995,7 @@
                     <div class="intro-layout">
                         <div class="intro-text">
                             <p class="section-subtitle">The Verification Pipeline</p>
-                            <p>Automated identity verification using  <span class="highlight">ID/ document OCR, liveness detection, and 1:1 face comparison</span>.  Tencent also offers AI face shield and Risk Control Engine to enhance the security level, detecting Deepfake and device risk levels. eKYC simplifies customer onboarding globally.</p>
+                            <p>Automated identity verification using ID document recognition, multi-layered <span class="highlight">liveness detection</span>, and face comparison. It simplifies customer onboarding globally.</p>
                             
                             <p class="section-subtitle" style="margin-top: 20px;">Security Highlights</p>
                             <ul>
@@ -981,31 +1051,31 @@
                 'menu-adp': 'ADP',
                 'menu-palmai': 'PalmAI',
                 'menu-ekyc': 'eKYC',
-                'tab-introduction': 'Ikhtisar Produk',
-                'tab-promotional': 'Media & Sorotan',
-                'tab-practical': 'Panduan & API',
+                'tab-introduction': 'Product overview',
+                'tab-promotional': 'Media & showcase',
+                'tab-practical': 'Guides & API',
                 
-                'adp-title': 'Platform Pengembangan Agen (ADP)',
-                'palmai-title': 'Tencent Palm - Satu Genggaman untuk Semua',
+                'adp-title': 'Tencent Cloud ADP - Dibuat dengan Mudah, Terbukti Berhasil, Dipercaya oleh Perusahaan',
+                'palmai-title': 'Tencent Palm - Satu Telapak Tangan untuk Segala Hal',
                 'ekyc-title': 'eKYC - Verifikasi Aman',
 
                 'adp-introduction': `
                     <div class="intro-layout">
                         <div class="intro-text">
                             <p class="section-subtitle">Kemampuan Inti</p>
-                            <p>Platform kelas perusahaan yang memanfaatkan <span class="highlight">RAG+LLM</span> dan orkestrasi multi-agen untuk aplikasi AI transformatif. Menyederhanakan logika bisnis kompleks menjadi agen yang siap digunakan.</p>
+                            <p>Platform kelas perusahaan yang memanfaatkan <span class="highlight">RAG+LLM, alur kerja, dan multi-agen</span> untuk aplikasi AI transformatif. Menyederhanakan logika bisnis kompleks menjadi agen yang dapat diterapkan.</p>
                             
                             <p class="section-subtitle" style="margin-top: 20px;">Mode Eksekusi</p>
                             <ul>
-                                <li><strong>Mode Standar:</strong> Pengambilan pengetahuan cerdas untuk jawaban cepat dan akurat.</li>
-                                <li><strong>Mode Alur Kerja:</strong> Menjalankan proses bisnis langkah demi langkah yang ditetapkan (misalnya, integrasi RPA).</li>
+                                <li><strong>Mode Standar:</strong> Pencarian pengetahuan cerdas untuk jawaban cepat dan akurat.</li>
+                                <li><strong>Mode Alur Kerja:</strong> Menjalankan proses bisnis langkah demi langkah yang ditentukan (misalnya, integrasi RPA).</li>
                                 <li><strong>Mode Multi-Agen:</strong> Perencanaan otonom dan pemecahan masalah kompleks berdasarkan kebutuhan dinamis.</li>
                             </ul>
                         </div>
                         <div class="intro-visual">
                             <div class="multi-image-container">
                                 <div class="image-container">
-                                    <img src="${IMAGE_URLS['adp-main']}" alt="Visualisasi Alur Kerja ADP" title="Visualisasi Alur Kerja ADP" loading="lazy">
+                                    <img src="${IMAGE_URLS['adp-main']}" alt="Alur Kerja Tencent Cloud ADP" title="Visualisasi Alur Kerja ADP" loading="lazy">
                                 </div>
                                 <div class="image-container">
                                     <img src="${IMAGE_URLS['adp-secondary1']}" alt="Tampilan Dasbor ADP" title="Tampilan Dasbor ADP" loading="lazy">
@@ -1051,7 +1121,7 @@
                             "Panduan Operasi"
                         )}
                         ${createActionButton(
-                            "#", 
+                            "https://www.tencentcloud.com/document/product/1254/73172", 
                             "fas fa-rocket", 
                             "Memulai"
                         )}
@@ -1062,16 +1132,16 @@
                     <div class="intro-layout">
                         <div class="intro-visual">
                             <div class="image-container">
-                                <img src="${IMAGE_URLS.palmai}" alt="Teknologi Pemindaian PalmAI" title="Teknologi Pemindaian PalmAI" loading="lazy">
+                                <img src="${IMAGE_URLS.palmai}" alt="Perangkat Pengenalan Telapak Tangan Tencent" title="Teknologi Pemindaian PalmAI" loading="lazy">
                             </div>
                         </div>
                         <div class="intro-text">
                             <p class="section-subtitle">Fungsi Inti</p>
-                            <p>PalmAI menyediakan verifikasi identitas yang sangat aman menggunakan <span class="highlight">sidik telapak tangan dan pengenalan urat internal</span> yang canggih. Ini menjamin otentikasi cepat, higienis, dan tanpa sentuhan.</p>
+                            <p>PalmAI menyediakan verifikasi identitas yang sangat aman menggunakan <span class="highlight">pengenalan sidik telapak tangan dan urat pembuluh internal</span> yang canggih. Ini menjamin otentikasi cepat, higienis, dan tanpa sentuhan.</p>
                             
                             <p class="section-subtitle" style="margin-top: 20px;">Keunggulan</p>
                             <ul>
-                                <li><strong>Keamanan Maksimal:</strong> Anti-spoofing unggul menggunakan pola urat bawah permukaan yang kompleks.</li>
+                                <li><strong>Keamanan Maksimal:</strong> Anti-spoofing unggul menggunakan pola urat pembuluh bawah permukaan yang kompleks.</li>
                                 <li><strong>Kenyamanan:</strong> Lebih cepat daripada sidik jari atau pengenalan wajah dalam konteks tertentu.</li>
                                 <li><strong>Aplikasi:</strong> Kontrol akses, transaksi keuangan keamanan tinggi, dan kios pintar.</li>
                             </ul>
@@ -1108,14 +1178,14 @@
                             
                             <p class="section-subtitle" style="margin-top: 20px;">Sorotan Keamanan</p>
                             <ul>
-                                <li><strong>Perisai Wajah AI:</strong> Teknologi anti-spoofing canggih yang dirancang untuk memerangi serangan <span class="highlight">Deepfake</span> dan AIGC (tingkat blokir 99%+).</li>
+                                <li><strong>Perisai Wajah AI:</strong> Teknologi anti-spoofing canggih yang dirancang untuk melawan serangan <span class="highlight">Deepfake</span> dan AIGC (tingkat blokir 99%+).</li>
                                 <li><strong>Kepatuhan Regulasi:</strong> Dibangun untuk memenuhi standar kepatuhan keuangan dan telekomunikasi global yang ketat.</li>
                                 <li><strong>Jangkauan Global:</strong> Mendukung dokumen ID dan peraturan di berbagai negara utama.</li>
                             </ul>
                         </div>
                         <div class="intro-visual">
                             <div class="image-container">
-                                <img src="${IMAGE_URLS.ekyc}" alt="Diagram Alur Verifikasi eKYC" title="Diagram Alur Verifikasi eKYC" loading="lazy">
+                                <img src="${IMAGE_URLS.ekyc}" alt="Alur Verifikasi eKYC" title="Diagram Alur Verifikasi eKYC" loading="lazy">
                             </div>
                         </div>
                     </div>
