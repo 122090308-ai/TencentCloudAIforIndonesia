@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tencent Cloud AI Fusion Nexus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --color-light-bg: #0a0e17; /* 深色科技背景 */
+            --color-surface: #121926; /* 卡片背景 */
+            --color-text-dark: #e2e8f0; /* 浅色文本 */
+            --color-text-secondary: #94a3b8;
+            --color-shadow: rgba(0, 120, 255, 0.15);
+            --transition-time: 0.4s;
+            --glow-effect: 0 0 15px rgba(0, 120, 255, 0.5);
+        }
+
+        /* 主题颜色定义 - 增强科技感渐变（重点修改eKYC配色） */
+        .theme-adp { 
+            --color-accent: #0088FF; 
+            --color-gradient-start: #0066ff; 
+            --color-gradient-end: #0022aa; 
+            --glow-color: rgba(0, 102, 255, 0.7);
+        } 
+        .theme-ekyc { 
+            --color-accent: #06b6d4; /* 青蓝色主色 */
+            --color-gradient-start: #22d3ee; /* 亮青蓝渐变起始 */
+            --color-gradient-end: #0891b2; /* 深青蓝渐变结束 */
+            --glow-color: rgba(34, 211, 238, 0.7); /* 青蓝色光效 */
+        } 
+        .theme-palmai { 
+            --color-accent: #10b981; 
+            --color-gradient-start: #10b981; 
+            --color-gradient-end: #059669; 
+            --glow-color: rgba(16, 185, 129, 0.7);
+        }
+
+        /* 粒子背景效果 */
+        .particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 10% 20%, rgba(18, 25, 38, 0.95), var(--color-light-bg) 90%);
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--glow-color);
+            border-radius: 50%;
+            opacity: 0;
+            animation: float 8s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) scale(0.1);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.2;
+            }
+            80% {
+                opacity: 0.2;
+            }
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* 产品视图背景 - 增强科技感 */
+        .product-view.active {
+            background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
+            display: block;
+            min-height: calc(100vh - 84px);
+            padding: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 科技感装饰元素 */
+        .product-view.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 30% 20%, rgba(0, 0, 0, 0.1) 0%, transparent 40%),
+                linear-gradient(45deg, transparent 30%, rgba(var(--glow-color), 0.05) 70%);
+            pointer-events: none;
+        }
+        
+        .product-view {
+            padding: 0; 
+            position: relative;
+        }
+
+        .tab-content-area {
+            background: var(--color-surface); 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .product-view h2 {
+            color: var(--color-surface);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .product-view h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--color-accent), transparent);
+            box-shadow: var(--glow-effect);
+        }
+
+        .internal-tab-menu button {
+            background: rgba(18, 25, 38, 0.8);
+            border: 1px solid var(--color-accent);
+            color: var(--color-text-dark);
+            backdrop-filter: blur(5px);
+        }
+
+        .internal-tab-menu button.active,
+        .internal-tab-menu button:hover {
+            background: var(--color-accent);
+            color: var(--color-surface);
+            box-shadow: var(--glow-effect);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Rajdhani', sans-serif;
+            color: var(--color-text-dark);
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--color-light-bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            font-size: 16px;
+            position: relative;
+        }
+
+        /* 头部和导航 - 科技感升级 */
+        .header {
+            width: 100%;
+            background: rgba(18, 25, 38, 0.9);
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px var(--color-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8em;
+            color: var(--color-text-dark);
+            position: relative;
+        }
+
+        .logo h1::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            box-shadow: var(--glow-effect);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: translateY(-50%) scale(1); }
+            50% { opacity: 0.5; transform: translateY(-50%) scale(0.8); }
+            100% { opacity: 1; transform: translateY(-50%) scale(1); }
+        }
+
+        /* 菜单按钮 - 科技感样式 */
+        .main-menu button {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            transition: all var(--transition-time);
+            letter-spacing: 1px;
+            color: var(--color-text-secondary);
+            font-family: 'Orbitron', sans-serif;
+            position: relative;
+        }
+
+        .main-menu button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--color-accent);
+            transition: width var(--transition-time);
+            box-shadow: var(--glow-effect);
+        }
+
+        .main-menu button:hover {
+            color: var(--color-accent);
+        }
+
+        .main-menu button:hover::after {
+            width: 100%;
+        }
+
+        .main-menu button.active {
+            color: var(--color-accent);
+            font-weight: bold;
+        }
+
+        .main-menu button.active::after {
+            width: 100%;
+        }
+
+        /* 语言切换 - 科技感样式 */
+        .language-switcher button {
+            background: rgba(18, 25, 38, 0.5);
+            border: 1px solid var(--color-text-secondary);
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 5px;
+            transition: all var(--transition-time);
+            font-size: 0.9em;
+            color: var(--color-text-secondary);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .language-switcher button.active {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+            color: var(--color-surface);
+            font-weight: bold;
+            box-shadow: var(--glow-effect);
+        }
+
+        /* 产品视图容器 */
+        .product-view {
+            display: none;
+            width: 100%;
+            flex-grow: 1;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* 内部 Tab 按钮 - 增强科技感 */
+        .internal-tab-menu {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 15px;
+        }
+        
+        .internal-tab-menu button {
+            padding: 15px 30px;
+            margin: 0;
+            cursor: pointer;
+            font-size: 1.3em;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
+            border-radius: 8px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            min-width: 200px;
+            font-family: 'Orbitron', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .internal-tab-menu button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: 0.5s;
+        }
+        
+        .internal-tab-menu button:hover::before {
+            left: 100%;
+        }
+        
+        .internal-tab-menu button.active,
+        .internal-tab-menu button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* 内部 Tab 内容区 - 增强科技感卡片 */
+        .tab-content-area {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            min-height: 500px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-content-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .tab-content {
+            display: none;
+            animation: slideInUp 0.5s ease-out;
+            padding: 20px 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* 产品介绍布局 */
+        .intro-layout {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .intro-text {
+            flex: 1;
+            line-height: 1.8;
+        }
+
+        .intro-visual {
+            flex: 1.2; 
+            max-width: 55%; 
+        }
+
+        .highlight {
+            color: var(--color-accent);
+            font-weight: 700;
+            text-shadow: 0 0 10px var(--glow-color);
+        }
+        
+        /* 图片容器样式 - 科技感边框 */
+        .image-container {
+            min-height: 250px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(var(--glow-color), 0.05) 70%);
+            pointer-events: none;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 400px;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+            color: initial; 
+            object-fit: contain;
+            transition: transform 0.5s ease;
+            filter: brightness(1.05) contrast(1.1);
+        }
+
+        .image-container:hover img {
+            transform: scale(1.02);
+        }
+
+        /* ADP 多图布局 */
+        .multi-image-container {
+            display: flex;
+            flex-direction: column; 
+            gap: 20px;
+            width: 100%;
+        }
+
+        .multi-image-container .image-container {
+            width: 100%;
+            min-height: auto;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .multi-image-container .image-container img {
+            max-height: 300px;
+            width: 100%;
+            height: auto;
+            border: none;
+            box-shadow: none;
+            object-fit: contain; 
+        }
+
+        /* 操作按钮 - 增强科技感 */
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding-top: 20px;
+        }
+
+        .action-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 140px;
+            padding: 20px;
+            background: rgba(18, 25, 38, 0.7);
+            border: 1px solid var(--color-accent);
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--color-accent);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: 0.6s;
+        }
+
+        .action-button:hover::before {
+            left: 100%;
+        }
+
+        .action-button i {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+            color: var(--color-accent);
+            text-shadow: var(--glow-effect);
+            transition: all 0.3s ease;
+        }
+        
+        .action-button span {
+            font-size: 1.05em; 
+            line-height: 1.3;
+            color: var(--color-accent); 
+            transition: color 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .action-button:hover {
+            background: var(--color-accent);
+            color: var(--color-surface);
+            box-shadow: var(--glow-effect), 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .action-button:hover i,
+        .action-button:hover span {
+            color: var(--color-surface);
+            text-shadow: none;
+        }
+
+        /* 小标题样式 */
+        .section-subtitle {
+            font-size: 1.4em;
+            color: var(--color-text-dark);
+            border-left: 4px solid var(--color-accent);
+            padding-left: 15px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.5px;
+            position: relative;
+        }
+
+        .section-subtitle::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 100%;
+            width: 40px;
+            height: 1px;
+            background: var(--color-accent);
+            box-shadow: var(--glow-effect);
+        }
+
+        /* 列表样式优化 */
+        ul {
+            margin-left: 25px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        li::before {
+            content: '•';
+            position: absolute;
+            left: -15px;
+            color: var(--color-accent);
+            font-weight: bold;
+            text-shadow: var(--glow-effect);
+        }
+
+        /* 动画效果增强 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* 移动端优化 */
+        @media (max-width: 900px) {
+            .header {
+                flex-direction: column;
+                padding: 15px 20px;
+                gap: 15px;
+            }
+            
+            .logo h1 {
+                font-size: 1.5em;
+            }
+            
+            .main-menu {
+                margin-top: 10px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .main-menu button {
+                padding: 8px 15px;
+                font-size: 1em;
+            }
+            
+            .product-view.active {
+                padding: 30px 15px;
+            }
+            
+            .tab-content-area {
+                padding: 25px 20px;
+                margin: 0 10px;
+            }
+            
+            .intro-layout {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .intro-visual {
+                max-width: 100%;
+                flex: 1; 
+            }
+            
+            .action-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .action-button {
+                height: 120px;
+                font-size: 1em;
+            }
+            
+            .action-button i {
+                font-size: 2.2em;
+            }
+            
+            .internal-tab-menu {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .internal-tab-menu button {
+                min-width: unset;
+                width: 100%;
+                padding: 12px 20px;
+                font-size: 1.1em;
+            }
+            
+            .product-view h2 {
+                font-size: 1.5em;
+            }
+            
+            .section-subtitle {
+                font-size: 1.2em;
+            }
+        }
+
+        /* 加载动画 */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--color-light-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader::after {
+            content: '';
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--color-accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: var(--glow-effect);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载动画 -->
+    <div class="loader" id="loader"></div>
+
+    <!-- 粒子背景 -->
+    <div class="particle-bg" id="particle-bg"></div>
+
+    <div class="header theme-adp" id="site-header">
+        <div class="logo">
+            <h1>Tencent Cloud AI for Indonesia</h1>
+        </div>
+        <div class="main-menu">
+            <button id="menu-adp" data-product="adp" class="active"></button>
+            <button id="menu-palmai" data-product="palmai"></button>
+            <button id="menu-ekyc" data-product="ekyc"></button> 
+        </div>
+        <div class="language-switcher">
+            <button id="lang-en" data-lang="en" class="active">EN</button>
+            <button id="lang-id" data-lang="id">ID</button>
+        </div>
+    </div>
+
+    <main id="main-content">
+        <div id="view-adp" class="product-view theme-adp active">
+            <h2 id="adp-title"></h2>
+            <div class="internal-tab-menu">
+                <button data-product="adp" data-tab="introduction" class="active"></button>
+                <button data-product="adp" data-tab="promotional"></button>
+                <button data-product="adp" data-tab="practical"></button>
+            </div>
+            <div class="tab-content-area">
+                <div id="adp-introduction" class="tab-content active"></div>
+                <div id="adp-promotional" class="tab-content"></div>
+                <div id="adp-practical" class="tab-content"></div>
+            </div>
+        </div>
+
+        <div id="view-palmai" class="product-view theme-palmai">
+            <h2 id="palmai-title"></h2>
+            <div class="internal-tab-menu">
+                <button data-product="palmai" data-tab="introduction" class="active"></button>
+                <button data-product="palmai" data-tab="promotional"></button>
+                <button data-product="palmai" data-tab="practical"></button> 
+            </div>
+            <div class="tab-content-area">
+                <div id="palmai-introduction" class="tab-content active"></div>
+                <div id="palmai-promotional" class="tab-content"></div>
+                <div id="palmai-practical" class="tab-content"></div>
+            </div>
+        </div>
+
+        <div id="view-ekyc" class="product-view theme-ekyc">
+            <h2 id="ekyc-title"></h2>
+            <div class="internal-tab-menu">
+                <button data-product="ekyc" data-tab="introduction" class="active"></button>
+                <button data-product="ekyc" data-tab="promotional"></button>
+                <button data-product="ekyc" data-tab="practical"></button>
+            </div>
+            <div class="tab-content-area">
+                <div id="ekyc-introduction" class="tab-content active"></div>
+                <div id="ekyc-promotional" class="tab-content"></div>
+                <div id="ekyc-practical" class="tab-content"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 生成粒子背景
+        function createParticles() {
+            const particleBg = document.getElementById('particle-bg');
+            const particleCount = window.innerWidth > 900 ? 50 : 20;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // 随机大小和位置
+                const size = Math.random() * 5 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 8}s`;
+                particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
+                
+                particleBg.appendChild(particle);
+            }
+        }
+
+        // 图片链接常量定义
+        const IMAGE_URLS = {
+            'adp-main': 'https://staticintl.cloudcachetci.com/cms/backend-cms/TvQC569_%E8%8B%B1%E6%96%87_1.png',
+            'adp-secondary1': 'https://staticintl.cloudcachetci.com/cms/backend-cms/PtEs780_%E8%8B%B1%E6%96%87_2.png',
+            'adp-secondary2': 'https://staticintl.cloudcachetci.com/cms/backend-cms/iN7I598_%E8%8B%B1%E6%96%87_3.jpg',
+            'palmai': 'https://static.wecard.qq.com/palmWeb/one-palm-right.png',
+            'ekyc': 'https://staticintl.cloudcachetci.com/cms/backend-cms/5giT241_%E4%BA%BA%E8%84%B8%E6%A0%B8%E8%BA%AB.png'
+        };
+
+        // 创建操作按钮
+        function createActionButton(href, iconClass, text) {
+            return `
+                <a href="${href}" target="_blank" class="action-button">
+                    <i class="${iconClass}"></i> 
+                    <span>${text}</span>
+                </a>
+            `;
+        }
+        
+        // 内容定义
+        const content = {
+            en: {
+                'menu-adp': 'ADP',
+                'menu-palmai': 'PalmAI',
+                'menu-ekyc': 'eKYC', 
+                'tab-introduction': 'Product Overview',
+                'tab-promotional': 'Media & Showcase',
+                'tab-practical': 'Guides & API', 
+                
+                'adp-title': 'Tencent Cloud ADP - Build With Ease, Proven to Deliver, Trusted by Enterprises',
+                'palmai-title': 'Tencent Palm - One Palm for All',
+                'ekyc-title': 'eKYC - Secure Verification',
+                
+                'adp-introduction': `
+                    <div class="intro-layout">
+                        <div class="intro-text">
+                            <p class="section-subtitle">Core Capability</p>
+                            <p>An enterprise-grade platform leveraging <span class="highlight">RAG+LLM, workflow, and multi-agent </span> for transformative AI applications. It simplifies complex business logic into deployable agents.</p>
+                            
+                            <p class="section-subtitle" style="margin-top: 20px;">Application Frameworks</p>
+                            <ul>
+                                <li><strong>Standard Mode:</strong> Intelligent knowledge retrieval for quick, accurate answers.</li>
+                                <li><strong>Workflow Mode:</strong> Executes defined, step-by-step business processes (e.g., RPA integration).</li>
+                                <li><strong>Multi-Agent Mode:</strong> Autonomous planning and complex problem-solving based on dynamic needs.</li>
+                            </ul>
+                        </div>
+                        <div class="intro-visual">
+                            <div class="multi-image-container">
+                                <div class="image-container">
+                                    <img src="${IMAGE_URLS['adp-main']}" alt="Tencent Cloud ADP Workflow" title="ADP Workflow Visualization" loading="lazy">
+                                </div>
+                                <div class="image-container">
+                                    <img src="${IMAGE_URLS['adp-secondary1']}" alt="ADP Dashboard View" title="ADP Dashboard View" loading="lazy">
+                                </div>
+                                <div class="image-container">
+                                    <img src="${IMAGE_URLS['adp-secondary2']}" alt="ADP Agent Configuration" title="ADP Agent Configuration" loading="lazy">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                'adp-promotional': (product) => `
+                    <div class="section-subtitle">Showcase & Official Resources</div>
+                    <div class="action-grid">
+                        ${createActionButton(
+                            "https://www.tencentcloud.com/products/adp", 
+                            "fas fa-globe", 
+                            "Official Product Website"
+                        )}
+                        ${createActionButton(
+                            "https://drive.google.com/file/d/11Z5WX8PYqbEVNbYz_VgZHYVr8rx7tSsd/view?usp=drive_link", 
+                            "fas fa-video", 
+                            "ADP Introduction Video"
+                        )}
+                        ${createActionButton(
+                            "https://drive.google.com/file/d/1TjjwJMIruutPGXI5MKM55p9XObJ5klfy/view?usp=drive_link", 
+                            "fas fa-graduation-cap", 
+                            "Training Session"
+                        )}
+                    </div>
+                `,
+                'adp-practical': (product) => `
+                    <div class="section-subtitle">Developer & Integration Materials</div>
+                    <div class="action-grid">
+                        ${createActionButton(
+                            "https://www.tencentcloud.com/document/product/1254/70168", 
+                            "fas fa-code", 
+                            "API Documentation"
+                        )}
+                        ${createActionButton(
+                            "https://www.tencentcloud.com/document/product/1254/69902", 
+                            "fas fa-cogs", 
+                            "Operation Guide"
+                        )}
+                        ${createActionButton(
+                            "#", 
+                            "fas fa-rocket", 
+                            "Getting Started"
+                        )}
+                    </div>
+                `,
+                
+                'palmai-introduction': `
+                    <div class="intro-layout">
+                        <div class="intro-visual">
+                            <div class="image-container">
+                                <img src="${IMAGE_URLS.palmai}" alt="Tencent Palm Recognition Device" title="PalmAI Scanning Technology" loading="lazy">
+                            </div>
+                        </div>
+                        <div class="intro-text">
+                            <p class="section-subtitle">Core Function</p>
+                            <p>PalmAI provides highly secure identity verification using advanced features such as <span class="highlight">palm print and internal vein recognition</span>. It ensures rapid, hygienic, and zero-touch authentication.</p>
+                            
+                            <p class="section-subtitle" style="margin-top: 20px;">Advantages</p>
+                            <ul>
+                                <li><strong>Ultimate Security:</strong> Superior anti-spoofing using complex, subsurface vein patterns.</li>
+                                <li><strong>Convenience:</strong> Faster than fingerprint or facial recognition in certain contexts.</li>
+                                <li><strong>Applications:</strong> Access control, high-security financial transactions, and smart kiosks.</li>
+                            </ul>
+                        </div>
+                    </div>
+                `,
+                'palmai-promotional': (product) => `
+                    <div class="section-subtitle">Showcase & Official Resources</div>
+                    <div class="action-grid">
+                        ${createActionButton(
+                            "https://palm.tencent.com/palm-web/home", 
+                            "fas fa-globe", 
+                            "Official Product Website"
+                        )}
+                        ${createActionButton(
+                            "https://drive.google.com/file/d/1RfLDbWYF_KYOaUn-bzUjEQOB1XyNX5bP/view?usp=sharing", 
+                            "fas fa-video", 
+                            "Product Video"
+                        )}
+                        ${createActionButton(
+                            "https://docs.google.com/presentation/d/1Cq583gw4xrEgcrcBnH2GB_Ku4QFInlhP/edit?usp=sharing&ouid=105833189646858687784&rtpof=true&sd=true", 
+                            "fas fa-file-powerpoint", 
+                            "Solution Introduction"
+                        )}
+                    </div>
+                `,
+                'palmai-practical': (product) => `<p style="text-align:center; padding: 40px 20px; color: var(--color-text-secondary);">No developer materials available at this moment. Please check the Official Product Website.</p>`,
+
+                'ekyc-introduction': `
+                    <div class="intro-layout">
+                        <div class="intro-text">
+                            <p class="section-subtitle">The Verification Pipeline</p>
+                            <p>Automated identity verification using  <span class="highlight">ID/ document OCR, liveness detection, and 1:1 face comparison</span>.  Tencent also offers AI face shield and Risk Control Engine to enhance the security level, detecting Deepfake and device risk levels. eKYC simplifies customer onboarding globally.</p>
+                            
+                            <p class="section-subtitle" style="margin-top: 20px;">Security Highlights</p>
+                            <ul>
+                                <li><strong>AI Face Shield:</strong> Advanced anti-spoofing technology designed to combat <span class="highlight">Deepfake</span> and AIGC attacks (99%+ block rate).</li>
+                                <li><strong>Regulatory Compliance:</strong> Built to meet strict global financial and telecom compliance standards.</li>
+                                <li><strong>Global Reach:</strong> Supports ID documents and regulations across multiple key countries.</li>
+                            </ul>
+                        </div>
+                        <div class="intro-visual">
+                            <div class="image-container">
+                                <img src="${IMAGE_URLS.ekyc}" alt="eKYC Verification Flow" title="eKYC Verification Flow Diagram" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                `,
+                'ekyc-promotional': (product) => `
+                    <div class="section-subtitle">Showcase & Official Resources</div>
+                    <div class="action-grid">
+                        ${createActionButton(
+                            "https://www.tencentcloud.com/products/faceid", 
+                            "fas fa-globe", 
+                            "Official Product Website"
+                        )}
+                        ${createActionButton(
+                            "https://drive.google.com/file/d/1fmU9MtDgWaYZxVyitGggZuVheiRHCmm5/view?usp=drive_link", 
+                            "fas fa-video", 
+                            "Product Video"
+                        )}
+                    </div>
+                `,
+                'ekyc-practical': (product) => `
+                    <div class="section-subtitle">Developer & Integration Materials</div>
+                    <div class="action-grid">
+                        ${createActionButton(
+                            "https://www.tencentcloud.com/document/product/1061/49421", 
+                            "fas fa-code", 
+                            "API Documentation"
+                        )}
+                        ${createActionButton(
+                            "https://www.tencentcloud.com/document/product/1061/55318", 
+                            "fas fa-tools", 
+                            "Integration Guide"
+                        )}
+                        ${createActionButton(
+                            "https://www.tencentcloud.com/document/product/1061/46724", 
+                            "fas fa-scroll", 
+                            "Policy"
+                        )}
+                    </div>
+                `
+            },
+            id: {
+                'menu-adp': 'ADP',
+                'menu-palmai': 'PalmAI',
+                'menu-ekyc': 'eKYC',
+                'tab-introduction': 'Ikhtisar Produk',
+                'tab-promotional': 'Media & Sorotan',
+                'tab-practical': 'Panduan & API',
+                
+                'adp-title': 'Platform Pengembangan Agen (ADP)',
+                'palmai-title': 'Tencent Palm - Satu Genggaman untuk Semua',
+                'ekyc-title': 'eKYC - Verifikasi Aman',
+
+                'adp-introduction': `
+                    <div class="intro-layout">
+                        <div class="intro-text">
+                            <p class="section-subtitle">Kemampuan Inti</p>
+                            <p>Platform kelas perusahaan yang memanfaatkan <span class="highlight">RAG+LLM</span> dan orkestrasi multi-agen untuk aplikasi AI transformatif. Menyederhanakan logika bisnis kompleks menjadi agen yang siap digunakan.</p>
+                            
+                            <p class="section-subtitle" style="margin-top: 20px;">Mode Eksekusi</p>
+                            <ul>
+                                <li><strong>Mode Standar:</strong> Pengambilan pengetahuan cerdas untuk jawaban cepat dan akurat.</li>
+                                <li><strong>Mode Alur Kerja:</strong> Menjalankan proses bisnis langkah demi langkah yang ditetapkan (misalnya, integrasi RPA).</li>
+                                <li><strong>Mode Multi-Agen:</strong> Perencanaan otonom dan pemecahan masalah kompleks berdasarkan kebutuhan dinamis.</li>
+                            </ul>
+                        </div>
+                        <div class="intro-visual">
+                            <div class="multi-image-container">
+                                <div class="image-container">
+                                    <img src="${IMAGE_URLS['adp-main']}" alt="Visualisasi Alur Kerja ADP" title="Visualisasi Alur Kerja ADP" loading="lazy">
+                                </div>
+                                <div class="image-container">
+                                    <img src="${IMAGE_URLS['adp-secondary1']}" alt="Tampilan Dasbor ADP" title="Tampilan Dasbor ADP" loading="lazy">
+                                </div>
+                                <div class="image-container">
+                                    <img src="${IMAGE_URLS['adp-secondary2']}" alt="Konfigurasi Agen ADP" title="Konfigurasi Agen ADP" loading="lazy">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                'adp-promotional': (product) => `
+                    <div class="section-subtitle">Sorotan & Sumber Daya Resmi</div>
+                    <div class="action-grid">
+                        ${createActionButton(
+                            "https://www.tencentcloud.com/products/adp", 
+                            "fas fa-globe", 
+                            "Situs Web Produk Resmi"
+                        )}
+                        ${createActionButton(
+                            "https://drive.google.com/file/d/11Z5WX8PYqbEVNbYz_VgZHYVr8rx7tSsd/view?usp=drive_link", 
+                            "fas fa-video", 
+                            "Video Pengantar ADP"
+                        )}
+                        ${createActionButton(
+                            "https://drive.google.com/file/d/1TjjwJMIruutPGXI5MKM55p9XObJ5klfy/view?usp=drive_link", 
+                            "fas fa-graduation-cap", 
+                            "Sesi Pelatihan"
+                        )}
+                    </div>
+                `,
+                'adp-practical': (product) => `
+                    <div class="section-subtitle">Materi Pengembang & Integrasi</div>
+                    <div class="action-grid">
+                        ${createActionButton(
+                            "https://www.tencentcloud.com/document/product/1254/70168", 
+                            "fas fa-code", 
+                            "Dokumentasi API"
+                        )}
+                        ${createActionButton(
+                            "https://www.tencentcloud.com/document/product/1254/69902", 
+                            "fas fa-cogs", 
+                            "Panduan Operasi"
+                        )}
+                        ${createActionButton(
+                            "#", 
+                            "fas fa-rocket", 
+                            "Memulai"
+                        )}
+                    </div>
+                `,
+                
+                'palmai-introduction': `
+                    <div class="intro-layout">
+                        <div class="intro-visual">
+                            <div class="image-container">
+                                <img src="${IMAGE_URLS.palmai}" alt="Teknologi Pemindaian PalmAI" title="Teknologi Pemindaian PalmAI" loading="lazy">
+                            </div>
+                        </div>
+                        <div class="intro-text">
+                            <p class="section-subtitle">Fungsi Inti</p>
+                            <p>PalmAI menyediakan verifikasi identitas yang sangat aman menggunakan <span class="highlight">sidik telapak tangan dan pengenalan urat internal</span> yang canggih. Ini menjamin otentikasi cepat, higienis, dan tanpa sentuhan.</p>
+                            
+                            <p class="section-subtitle" style="margin-top: 20px;">Keunggulan</p>
+                            <ul>
+                                <li><strong>Keamanan Maksimal:</strong> Anti-spoofing unggul menggunakan pola urat bawah permukaan yang kompleks.</li>
+                                <li><strong>Kenyamanan:</strong> Lebih cepat daripada sidik jari atau pengenalan wajah dalam konteks tertentu.</li>
+                                <li><strong>Aplikasi:</strong> Kontrol akses, transaksi keuangan keamanan tinggi, dan kios pintar.</li>
+                            </ul>
+                        </div>
+                    </div>
+                `,
+                'palmai-promotional': (product) => `
+                    <div class="section-subtitle">Sorotan & Sumber Daya Resmi</div>
+                    <div class="action-grid">
+                        ${createActionButton(
+                            "https://palm.tencent.com/palm-web/home", 
+                            "fas fa-globe", 
+                            "Situs Web Produk Resmi"
+                        )}
+                        ${createActionButton(
+                            "https://drive.google.com/file/d/1RfLDbWYF_KYOaUn-bzUjEQOB1XyNX5bP/view?usp=sharing", 
+                            "fas fa-video", 
+                            "Video Produk"
+                        )}
+                        ${createActionButton(
+                            "https://docs.google.com/presentation/d/1Cq583gw4xrEgcrcBnH2GB_Ku4QFInlhP/edit?usp=sharing&ouid=105833189646858687784&rtpof=true&sd=true", 
+                            "fas fa-file-powerpoint", 
+                            "Pengantar Solusi"
+                        )}
+                    </div>
+                `,
+                'palmai-practical': (product) => `<p style="text-align:center; padding: 40px 20px; color: var(--color-text-secondary);">Materi pengembang belum tersedia saat ini. Silakan kunjungi Situs Web Produk Resmi.</p>`,
+
+                'ekyc-introduction': `
+                    <div class="intro-layout">
+                        <div class="intro-text">
+                            <p class="section-subtitle">Alur Verifikasi</p>
+                            <p>Verifikasi identitas otomatis menggunakan pengenalan dokumen ID, <span class="highlight">deteksi keaktifan</span> berlapis, dan perbandingan wajah. Ini menyederhanakan orientasi pelanggan secara global.</p>
+                            
+                            <p class="section-subtitle" style="margin-top: 20px;">Sorotan Keamanan</p>
+                            <ul>
+                                <li><strong>Perisai Wajah AI:</strong> Teknologi anti-spoofing canggih yang dirancang untuk memerangi serangan <span class="highlight">Deepfake</span> dan AIGC (tingkat blokir 99%+).</li>
+                                <li><strong>Kepatuhan Regulasi:</strong> Dibangun untuk memenuhi standar kepatuhan keuangan dan telekomunikasi global yang ketat.</li>
+                                <li><strong>Jangkauan Global:</strong> Mendukung dokumen ID dan peraturan di berbagai negara utama.</li>
+                            </ul>
+                        </div>
+                        <div class="intro-visual">
+                            <div class="image-container">
+                                <img src="${IMAGE_URLS.ekyc}" alt="Diagram Alur Verifikasi eKYC" title="Diagram Alur Verifikasi eKYC" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                `,
+                'ekyc-promotional': (product) => `
+                    <div class="section-subtitle">Sorotan & Sumber Daya Resmi</div>
+                    <div class="action-grid">
+                        ${createActionButton(
+                            "https://www.tencentcloud.com/products/faceid", 
+                            "fas fa-globe", 
+                            "Situs Web Produk Resmi"
+                        )}
+                        ${createActionButton(
+                            "https://drive.google.com/file/d/1fmU9MtDgWaYZxVyitGggZuVheiRHCmm5/view?usp=drive_link", 
+                            "fas fa-video", 
+                            "Video Produk"
+                        )}
+                    </div>
+                `,
+                'ekyc-practical': (product) => `
+                    <div class="section-subtitle">Materi Pengembang & Integrasi</div>
+                    <div class="action-grid">
+                        ${createActionButton(
+                            "https://www.tencentcloud.com/document/product/1061/49421", 
+                            "fas fa-code", 
+                            "Dokumentasi API"
+                        )}
+                        ${createActionButton(
+                            "https://www.tencentcloud.com/document/product/1061/55318", 
+                            "fas fa-tools", 
+                            "Panduan Integrasi"
+                        )}
+                        ${createActionButton(
+                            "https://www.tencentcloud.com/document/product/1061/46724", 
+                            "fas fa-scroll", 
+                            "Kebijakan"
+                        )}
+                    </div>
+                `
+            }
+        };
+
+        // 全局状态
+        let currentLang = 'en';
+        let currentProduct = 'adp';
+        let currentTabs = {
+            'adp': 'introduction',
+            'palmai': 'introduction',
+            'ekyc': 'introduction'
+        };
+
+        // 更新页面内容
+        function updateContent(lang) {
+            currentLang = lang;
+            const langContent = content[lang];
+
+            // 更新顶部菜单
+            document.querySelectorAll('.main-menu button').forEach(button => {
+                const productId = button.dataset.product;
+                button.textContent = langContent[`menu-${productId}`];
+            });
+
+            // 更新内部Tab菜单
+            document.querySelectorAll('.internal-tab-menu button').forEach(button => {
+                const tabId = button.dataset.tab;
+                const productId = button.dataset.product;
+                button.textContent = langContent[`tab-${tabId}`];
+                
+                // 隐藏PalmAI的Practical标签
+                if (productId === 'palmai' && tabId === 'practical') {
+                    button.style.display = 'none';
+                }
+            });
+
+            // 更新产品标题
+            document.getElementById('adp-title').textContent = langContent['adp-title'];
+            document.getElementById('palmai-title').textContent = langContent['palmai-title'];
+            document.getElementById('ekyc-title').textContent = langContent['ekyc-title'];
+
+            // 重新渲染当前产品内容
+            switchProduct(currentProduct);
+        }
+
+        // 切换产品视图
+        function switchProduct(productId) {
+            currentProduct = productId;
+
+            // 更新主菜单激活状态
+            document.querySelectorAll('.main-menu button').forEach(button => {
+                button.classList.toggle('active', button.dataset.product === productId);
+            });
+            
+            // 更新语言按钮激活状态
+            document.querySelectorAll('.language-switcher button').forEach(button => {
+                button.classList.toggle('active', button.dataset.lang === currentLang);
+            });
+
+            // 切换产品视图显示
+            document.querySelectorAll('.product-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            
+            const activeView = document.getElementById(`view-${productId}`);
+            if (activeView) {
+                activeView.classList.add('active');
+                document.getElementById('site-header').className = `header theme-${productId}`;
+                switchTab(productId, currentTabs[productId] || 'introduction');
+            }
+        }
+
+        // 切换内部Tab
+        function switchTab(productId, tabId) {
+            currentTabs[productId] = tabId;
+            const view = document.getElementById(`view-${productId}`);
+            const langContent = content[currentLang];
+
+            if (!view) return;
+
+            // 更新Tab激活状态
+            view.querySelectorAll('.internal-tab-menu button').forEach(button => {
+                button.classList.toggle('active', button.dataset.tab === tabId);
+            });
+
+            // 更新内容显示
+            view.querySelectorAll('.tab-content').forEach(contentDiv => {
+                contentDiv.classList.remove('active');
+            });
+
+            const activeContentDiv = document.getElementById(`${productId}-${tabId}`);
+            if (activeContentDiv) {
+                activeContentDiv.classList.add('active');
+                
+                // 渲染内容
+                const contentKey = `${productId}-${tabId}`;
+                const rawContent = langContent[contentKey];
+                
+                if (typeof rawContent === 'function') {
+                    activeContentDiv.innerHTML = rawContent(productId);
+                } else if (rawContent) {
+                    activeContentDiv.innerHTML = rawContent;
+                }
+            }
+        }
+
+        // 页面加载完成初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 创建粒子背景
+            createParticles();
+            
+            // 隐藏加载动画
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+            }, 800);
+
+            // 初始化内容
+            updateContent(currentLang); 
+            switchProduct(currentProduct);
+
+            // 主菜单切换事件
+            document.querySelectorAll('.main-menu button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const productId = button.dataset.product;
+                    switchProduct(productId);
+                });
+            });
+
+            // 语言切换事件
+            document.querySelectorAll('.language-switcher button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const lang = button.dataset.lang;
+                    document.querySelectorAll('.language-switcher button').forEach(b => b.classList.remove('active'));
+                    button.classList.add('active');
+                    updateContent(lang);
+                });
+            });
+
+            // 内部Tab切换事件（事件委托）
+            document.getElementById('main-content').addEventListener('click', (event) => {
+                const button = event.target.closest('.internal-tab-menu button');
+                if (button) {
+                    const productId = button.dataset.product;
+                    const tabId = button.dataset.tab;
+                    switchTab(productId, tabId);
+                }
+            });
+
+            // 窗口大小变化时重新生成粒子
+            window.addEventListener('resize', () => {
+                const particleBg = document.getElementById('particle-bg');
+                particleBg.innerHTML = '';
+                createParticles();
+            });
+        });
+    </script>
+</body>
+</html>
